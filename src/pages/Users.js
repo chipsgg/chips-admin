@@ -10,7 +10,7 @@ class Wallets extends React.Component {
     this.state = {
       columns: [
         ["ID", "id"],
-        ["Login", 'login']
+        ["Username", 'username']
         // ["Balance", "balance", "number"],
         // ["Can Withdraw", "canWithdraw", "boolean"],
         // ["Can Deposit", "canDeposit", 'boolean']
