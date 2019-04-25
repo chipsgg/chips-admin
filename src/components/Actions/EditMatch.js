@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 import {
   Pane,
   Heading,
@@ -12,45 +12,47 @@ import {
   Badge,
   Button,
   Tooltip,
-  Spinner
-} from "evergreen-ui";
+  Spinner,
+} from 'evergreen-ui'
 
-import CancelConfirm from "./CancelConfirm";
-import ResolveConfirm from "./ResolveConfirm";
-import CreateProposition from "./CreateProposition";
+import CancelConfirm from './CancelConfirm'
+import ResolveConfirm from './ResolveConfirm'
+import CreateProposition from './CreateProposition'
+import PlaceBet from './Placebet'
 
 class EditMatch extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       isShown: false,
       loading: false,
       propositions: props.row.propositions || [],
-      match: props.row
-    };
+      match: props.row,
+    }
   }
 
   toggleShown = () => {
-    console.log("toggle");
+    console.log('toggle')
     this.setState({
-      isShown: !this.state.isShown
-    });
-  };
+      isShown: !this.state.isShown,
+    })
+  }
 
   getPropositions = async () => {
-    this.setState({ loading: true });
-    const { actions, match } = this.props;
-    const list = await actions.listPropositionsByMatchid({ matchid: match.id });
-    console.log(list);
+    this.setState({ loading: true })
+    const { actions } = this.props
+    const { match } = this.state
+    const list = await actions.listPropositionsByMatchid({ matchid: match.id })
+    console.log(list)
     this.setState({
       loading: false,
-      propositions: list
-    });
-  };
+      propositions: list,
+    })
+  }
 
   render() {
-    const { isShown, match, propositions, loading } = this.state;
-    const { actions } = this.props;
+    const { isShown, match, propositions, loading } = this.state
+    const { actions } = this.props
     return (
       <Pane>
         <SideSheet
@@ -58,9 +60,9 @@ class EditMatch extends React.Component {
           isShown={isShown}
           onCloseComplete={() => this.setState({ isShown: false })}
           containerProps={{
-            display: "flex",
-            flex: "1",
-            flexDirection: "column"
+            display: 'flex',
+            flex: '1',
+            flexDirection: 'column',
           }}
         >
           <Pane zIndex={1} flexShrink={0} elevation={0} backgroundColor="white">
@@ -90,9 +92,9 @@ class EditMatch extends React.Component {
                   onConfirm={async params => {
                     await actions.createProposition({
                       matchid: match.id,
-                      ...params
-                    });
-                    await this.getPropositions();
+                      ...params,
+                    })
+                    await this.getPropositions()
                   }}
                 />
               </Pane>
@@ -122,24 +124,34 @@ class EditMatch extends React.Component {
                     <Pane flex={1}>
                       <Heading>{proposition.name}</Heading>
                     </Pane>
-                    {proposition.state === "open" ? (
+                    {proposition.state === 'open' ? (
                       <Pane display="flex" flexDirection="row">
+                        <PlaceBet
+                          onConfirm={async params => {
+                            await actions.placeBetOnProposition({
+                              propositionid: proposition.id,
+                              ...params,
+                            })
+                            await this.getPropositions()
+                          }}
+                          selections={proposition.selections}
+                        />
                         <ResolveConfirm
                           onConfirm={async selection => {
                             await actions.resolveProposition({
                               propositionid: proposition.id,
-                              selection
-                            });
-                            await this.getPropositions();
+                              selection,
+                            })
+                            await this.getPropositions()
                           }}
                           selections={proposition.selections}
                         />
                         <CancelConfirm
                           onConfirm={async () => {
                             await actions.cancelProposition({
-                              propositionid: proposition.id
-                            });
-                            await this.getPropositions();
+                              propositionid: proposition.id,
+                            })
+                            await this.getPropositions()
                           }}
                         />
                       </Pane>
@@ -159,12 +171,20 @@ class EditMatch extends React.Component {
                       {proposition.selections.toString()}
                     </ListItem>
                     <ListItem>
+                      <Strong>Odds: </Strong>
+                      {proposition.odds.map(odds => odds.odds).toString()}
+                    </ListItem>
+                    <ListItem>
+                      <Strong>Value: </Strong>
+                      <Badge>${proposition.value}</Badge>
+                    </ListItem>
+                    <ListItem>
                       <Strong>State: </Strong>
                       <Badge>{proposition.state}</Badge>
                     </ListItem>
                     <ListItem>
                       <Strong>Outcome: </Strong>
-                      {proposition.outcome || "n/a"}
+                      {proposition.outcome || 'n/a'}
                     </ListItem>
                   </UnorderedList>
                 </Card>
@@ -178,8 +198,8 @@ class EditMatch extends React.Component {
           </Button>
         </Tooltip>
       </Pane>
-    );
+    )
   }
 }
 
-export default EditMatch;
+export default EditMatch

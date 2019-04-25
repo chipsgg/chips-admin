@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 import {
   Pane,
   Button,
@@ -7,22 +7,22 @@ import {
   Dialog,
   TextInputField,
   TagInput,
-  Text
-} from "evergreen-ui";
+  Text,
+} from 'evergreen-ui'
 
 class CreateProposition extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       showConfirmation: false,
-      name: "",
-      selections: []
-    };
+      name: '',
+      selections: [],
+    }
   }
 
   render() {
-    const { onConfirm } = this.props;
-    const { showConfirmation, name, selections } = this.state;
+    const { onConfirm } = this.props
+    const { showConfirmation, name, selections } = this.state
 
     return (
       <Pane>
@@ -31,16 +31,16 @@ class CreateProposition extends React.Component {
           isShown={showConfirmation}
           onCloseComplete={() => this.setState({ showConfirmation: false })}
           onConfirm={async () => {
-            toaster.notify("Creating Proposition...");
+            toaster.notify('Creating Proposition...')
             if (onConfirm) {
               await onConfirm({
                 name,
-                selections
+                selections,
               })
-                .then(resp => toaster.success("Proposition Created!"))
-                .catch(err => toaster.danger(err.message));
+                .then(resp => toaster.success('Proposition Created!'))
+                .catch(err => toaster.danger(err.message))
             }
-            this.setState({ showConfirmation: false });
+            this.setState({ showConfirmation: false })
           }}
           confirmLabel="Create Proposition"
           cancelLabel="Oops, nevermind."
@@ -60,7 +60,7 @@ class CreateProposition extends React.Component {
               placeholder="Bloods,Crips"
               value={selections.toString()}
               onChange={e => {
-                this.setState({ selections: e.target.value.split(",") });
+                this.setState({ selections: e.target.value.split(',') })
               }}
             />
           </Pane>
@@ -70,15 +70,15 @@ class CreateProposition extends React.Component {
             iconBefore="plus"
             marginLeft={16}
             onClick={() => {
-              this.setState({ showConfirmation: true });
+              this.setState({ showConfirmation: true })
             }}
           >
             Create Proposition
           </Button>
         </Tooltip>
       </Pane>
-    );
+    )
   }
 }
 
-export default CreateProposition;
+export default CreateProposition

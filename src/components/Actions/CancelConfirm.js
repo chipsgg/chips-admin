@@ -50,7 +50,6 @@ class CancelConfirm extends React.Component {
         />
         <Tooltip content="Cancel">
           <IconButton
-            marginLeft={16}
             icon="delete"
             intent="danger"
             onClick={() => {
