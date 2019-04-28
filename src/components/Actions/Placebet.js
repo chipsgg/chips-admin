@@ -42,13 +42,13 @@ class PlaceBet extends React.Component {
             zIndex: 999,
           }}
           onConfirm={async () => {
-            toaster.notify('Resolving Proposition...')
+            toaster.notify('Placing bet...')
             if (onConfirm) {
               await onConfirm({
                 selection,
                 amount,
               })
-                .then(resp => toaster.success('Proposition Resolved!'))
+                .then(resp => toaster.success('Bet Placed!'))
                 .catch(err => toaster.danger(err.message))
             }
             this.setState({ showConfirmation: false })
@@ -73,9 +73,9 @@ class PlaceBet extends React.Component {
           </Pane>
         </CornerDialog>
 
-        <Tooltip content="Amount">
+        <Tooltip content="Place Bet">
           <IconButton
-            icon="new-object"
+            icon="form"
             intent="none"
             onClick={() => {
               this.setState({ showConfirmation: true })

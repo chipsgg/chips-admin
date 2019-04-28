@@ -22,7 +22,7 @@ class Macthes extends React.Component {
       columns: [
         ["ID", "id"],
         ["Opponents", "opponents", "opponents"],
-        // ["League", "league.name"],
+        // ["Value", "value", 'number'],
         ["Status", "state", "state"],
         ["Provider", "provider"],
         ["Start Time", "startTime", "time"]
