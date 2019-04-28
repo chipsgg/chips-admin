@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: chips-admin-svc
+spec:
+  selector:
+    name: chips-admin
+  type: LoadBalancer
+  ports:
+  - name: frontend
+    protocol: TCP
+    port: 80

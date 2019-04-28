@@ -1,0 +1,11 @@
+apiVersion: 'v1'
+kind: Pod
+metadata:
+  name: chips-admin
+  labels:
+    name: chips-admin
+spec:
+  containers:
+    - name: chips-admin
+      image: gcr.io/chipsgg-184323/chips-admin
+      imagePullPolicy: Always
