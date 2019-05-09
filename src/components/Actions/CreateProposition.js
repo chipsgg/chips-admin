@@ -55,12 +55,13 @@ class CreateProposition extends React.Component {
               onChange={e => this.setState({ name: e.target.value })}
             />
             <TextInputField
-              label="Selections"
+              label="Selections ( Limit 2 )"
               description="Comma seperated list of available selections."
               placeholder="Bloods,Crips"
               value={selections.toString()}
               onChange={e => {
-                this.setState({ selections: e.target.value.split(',') })
+                const selections = e.target.value.split(',').slice(0, 2)
+                this.setState({ selections })
               }}
             />
           </Pane>

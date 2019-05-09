@@ -19,6 +19,7 @@ import CancelConfirm from './CancelConfirm'
 import ResolveConfirm from './ResolveConfirm'
 import CreateProposition from './CreateProposition'
 import PlaceBet from './Placebet'
+import { orderBy } from 'lodash'
 
 class EditMatch extends React.Component {
   constructor(props) {
@@ -112,19 +113,33 @@ class EditMatch extends React.Component {
                 <Spinner />
               </Pane>
             ) : (
-              propositions.map(proposition => (
+              orderBy(propositions, 'done').map(proposition => (
                 <Card
                   key={proposition.id}
                   backgroundColor="white"
                   elevation={0}
                   margin={16}
                   padding={16}
+                  position="relative"
                 >
+                  {proposition.state === 'finished' && (
+                    <Pane
+                      top={0}
+                      left={0}
+                      display="flex"
+                      position="absolute"
+                      backgroundColor="black"
+                      width="100%"
+                      height="100%"
+                      opacity={0.2}
+                      zIndex={999}
+                    />
+                  )}
                   <Pane display="flex">
                     <Pane flex={1}>
                       <Heading>{proposition.name}</Heading>
                     </Pane>
-                    {proposition.state === 'open' ? (
+                    {proposition.state !== 'finished' && (
                       <Pane display="flex" flexDirection="row">
                         <PlaceBet
                           onConfirm={async params => {
@@ -155,7 +170,7 @@ class EditMatch extends React.Component {
                           }}
                         />
                       </Pane>
-                    ) : null}
+                    )}
                   </Pane>
                   <UnorderedList>
                     <ListItem>
