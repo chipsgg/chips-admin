@@ -37,7 +37,8 @@ class CreateProposition extends React.Component {
     return (
       <Pane>
         <Dialog
-          title="Custom | Create Match"
+          width={'75%'}
+          title="Create Custom Match"
           isShown={showConfirmation}
           onCloseComplete={() => this.setState({ showConfirmation: false })}
           onConfirm={async () => {
@@ -65,6 +66,7 @@ class CreateProposition extends React.Component {
             /> */}
 
             <AceEditor
+              fontSize={14}
               width={'100%'}
               name="editor"
               mode="json"
