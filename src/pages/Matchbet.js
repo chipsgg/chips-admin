@@ -12,7 +12,7 @@ import {
 } from "evergreen-ui";
 import DataTable from "../components/DataTable";
 import { sortBy, debounce } from "lodash";
-import CreateMatch from "../components/Actions/CreateMatch";
+import MatchEditor from "../components/Actions/MatchEditor";
 import EditMatch from "../components/Actions/EditMatch";
 
 class Macthes extends React.Component {
@@ -116,7 +116,7 @@ class Macthes extends React.Component {
           >
             Refresh
           </Button>
-          <CreateMatch onConfirm={actions.createMatch} />
+          <MatchEditor onConfirm={actions.createMatch} />
           <Pane width={1} flex={1} />
           <SearchInput
             placeholder="Search..."

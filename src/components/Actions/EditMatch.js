@@ -15,6 +15,7 @@ import {
   Spinner,
 } from 'evergreen-ui'
 
+import MatchEditor from './MatchEditor'
 import CancelConfirm from './CancelConfirm'
 import ResolveConfirm from './ResolveConfirm'
 import CreateProposition from './CreateProposition'
@@ -74,13 +75,15 @@ class EditMatch extends React.Component {
               borderBottom="muted"
             >
               <Pane flex={1} padding={16}>
-                <Heading size={600}>Edit Match Propositions</Heading>
+                <Heading size={600}>Edit Match Details</Heading>
                 <Paragraph size={400} color="muted">
                   {match.id}
                 </Paragraph>
                 <Badge>{match.state}</Badge>
               </Pane>
-              <Pane
+              
+            </Pane>
+            <Pane
                 display="flex"
                 alignItems="center"
                 justifyContent="center"
@@ -89,6 +92,7 @@ class EditMatch extends React.Component {
                 <Button iconBefore="refresh" onClick={this.getPropositions}>
                   Refresh
                 </Button>
+                <MatchEditor schema={match} onConfirm={actions.createMatch} />
                 <CreateProposition
                   onConfirm={async params => {
                     await actions.createProposition({
@@ -99,7 +103,6 @@ class EditMatch extends React.Component {
                   }}
                 />
               </Pane>
-            </Pane>
           </Pane>
 
           <Pane flex="1" overflowY="scroll" background="tint1">
