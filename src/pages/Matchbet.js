@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import {
   Pane,
   Spinner,
@@ -8,58 +8,57 @@ import {
   Button,
   Tablist,
   Tab,
-  SearchInput,
-} from 'evergreen-ui'
-import DataTable from '../components/DataTable'
-import { sortBy, debounce } from 'lodash'
-import CreateMatch from '../components/Actions/CreateMatch'
-import EditMatch from '../components/Actions/EditMatch'
+  SearchInput
+} from "evergreen-ui";
+import DataTable from "../components/DataTable";
+import { sortBy, debounce } from "lodash";
+import CreateMatch from "../components/Actions/CreateMatch";
+import EditMatch from "../components/Actions/EditMatch";
 
 class Macthes extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       loading: true,
       columns: [
-        ['ID', 'id'],
-        ['Opponents', 'opponents', 'opponents'],
+        ["ID", "id"],
+        ["Opponents", "opponents", "opponents"],
         // ["Value", "value", 'number'],
-        ['Status', 'state', 'state'],
-        ['Provider', 'provider'],
-        ['Start Time', 'startTime', 'time'],
+        ["Status", "state", "state"],
+        ["Provider", "provider"],
+        ["Start Time", "startTime", "time"]
       ],
-      tabs: ['Matches', 'Propositions', 'Users'],
-      selectedTab: 'Matches',
+      tabs: ["Matches", "Propositions", "Users"],
+      selectedTab: "Matches",
       matches: [],
-      searchTerm: '',
-      searchResults: [],
-    }
+      searchTerm: "",
+      searchResults: []
+    };
   }
 
   componentDidMount() {
-    this.getMatches()
+    this.getMatches();
   }
 
   getMatches = async () => {
-    this.setState({ loading: true })
-    const { actions } = this.props
-    const list = await actions.listAvailableMatchesWithPropositions()
-    console.log(list)
+    this.setState({ loading: true });
+    const { actions } = this.props;
+    const list = await actions.listAvailableMatchesWithPropositions();
+    console.log(list);
     this.setState({
       loading: false,
-      matches: sortBy(list, 'startTime'),
-    })
-  }
+      matches: sortBy(list, "startTime")
+    });
+  };
 
   onSearch = e => {
-    const { matches } = this.state
-    const searchTerm = e.target.value.toLowerCase()
+    const { matches } = this.state;
+    const searchTerm = e.target.value.toLowerCase();
 
     this.setState({
       searchTerm,
       searchResults: matches.filter(match => {
-
-        console.log(match)
+        console.log(match);
 
         const props = [
           match.id,
@@ -67,12 +66,12 @@ class Macthes extends React.Component {
           match.provider,
           match.state,
           match.game
-        ]
+        ];
 
-        return props.find(prop => prop.includes(searchTerm))
-      }),
-    })
-  }
+        return props.find(prop => prop.includes(searchTerm));
+      })
+    });
+  };
 
   render() {
     const {
@@ -82,11 +81,11 @@ class Macthes extends React.Component {
       tabs,
       selectedTab,
       searchTerm,
-      searchResults,
-    } = this.state
-    const { actions } = this.props
+      searchResults
+    } = this.state;
+    const { actions } = this.props;
     return (
-      <Pane width={'100%'} display="flex" flexDirection="column">
+      <Pane width={"100%"} display="flex" flexDirection="column">
         {/* <Pane display="flex" padding={8}>
           <Tablist>
             {tabs.map(tab => (
@@ -101,7 +100,7 @@ class Macthes extends React.Component {
           </Tablist>
         </Pane> */}
         <Pane
-          width={'100%'}
+          width={"100%"}
           borderBottom
           // borderTop
           display="flex"
@@ -117,7 +116,7 @@ class Macthes extends React.Component {
           >
             Refresh
           </Button>
-          <CreateMatch />
+          <CreateMatch onConfirm={actions.createMatch} />
           <Pane width={1} flex={1} />
           <SearchInput
             placeholder="Search..."
@@ -142,8 +141,8 @@ class Macthes extends React.Component {
           )}
         </Pane>
       </Pane>
-    )
+    );
   }
 }
 
-export default Macthes
+export default Macthes;
