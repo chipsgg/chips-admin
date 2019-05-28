@@ -31,7 +31,7 @@ class CreateProposition extends React.Component {
   }
 
   render() {
-    const { onConfirm } = this.props;
+    const { onConfirm, children } = this.props;
     const { showConfirmation, match, schema } = this.state;
 
     return (
@@ -79,7 +79,7 @@ class CreateProposition extends React.Component {
             />
           </Pane>
         </Dialog>
-        <Tooltip content="Create/Edit Match">
+        <Tooltip content="Open Editor">
           <Button
             iconBefore="annotation"
             marginLeft={16}
@@ -87,7 +87,7 @@ class CreateProposition extends React.Component {
               this.setState({ showConfirmation: true });
             }}
           >
-            Create/Edit Match
+            {children}
           </Button>
         </Tooltip>
       </Pane>

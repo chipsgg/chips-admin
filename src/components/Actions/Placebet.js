@@ -75,6 +75,7 @@ class PlaceBet extends React.Component {
 
         <Tooltip content="Place Bet">
           <IconButton
+            marginLeft={16}
             icon="form"
             intent="none"
             onClick={() => {

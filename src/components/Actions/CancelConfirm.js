@@ -1,5 +1,12 @@
 import React from "react";
-import { Pane, IconButton, Tooltip, toaster, CornerDialog } from "evergreen-ui";
+import {
+  Pane,
+  Button,
+  IconButton,
+  Tooltip,
+  toaster,
+  CornerDialog
+} from "evergreen-ui";
 
 const Confirmation = ({ showConfirmation = false, onConfirm, setState }) => (
   <CornerDialog
@@ -28,7 +35,7 @@ class CancelConfirm extends React.Component {
 
   render() {
     const { showConfirmation } = this.state;
-    const { onConfirm } = this.props;
+    const { onConfirm, children } = this.props;
 
     return (
       <Pane>
@@ -49,13 +56,27 @@ class CancelConfirm extends React.Component {
           }}
         />
         <Tooltip content="Cancel">
-          <IconButton
-            icon="delete"
-            intent="danger"
-            onClick={() => {
-              this.setState({ showConfirmation: true });
-            }}
-          />
+          {children ? (
+            <Button
+              marginLeft={16}
+              iconBefore="delete"
+              intent="danger"
+              onClick={() => {
+                this.setState({ showConfirmation: true });
+              }}
+            >
+              {children}
+            </Button>
+          ) : (
+            <IconButton
+              marginLeft={16}
+              icon="delete"
+              intent="danger"
+              onClick={() => {
+                this.setState({ showConfirmation: true });
+              }}
+            />
+          )}
         </Tooltip>
       </Pane>
     );

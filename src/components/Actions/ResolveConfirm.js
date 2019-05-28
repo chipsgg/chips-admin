@@ -59,6 +59,7 @@ class ResolveConfirm extends React.Component {
 
         <Tooltip content="Resolve">
           <IconButton
+            marginLeft={16}
             icon="tick-circle"
             intent="success"
             onClick={() => {

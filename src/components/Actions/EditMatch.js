@@ -34,7 +34,8 @@ class EditMatch extends React.Component {
   }
 
   toggleShown = () => {
-    console.log("toggle");
+    const { onClose } = this.props;
+    if (this.state.isShown && onClose) onClose();
     this.setState({
       isShown: !this.state.isShown
     });
@@ -98,7 +99,7 @@ class EditMatch extends React.Component {
                   await actions.editMatch(match);
                   await this.getPropositions();
                 }}
-              />
+              >Edit Match</MatchEditor>
               <CreateProposition
                 onConfirm={async params => {
                   await actions.createProposition({
@@ -108,18 +109,15 @@ class EditMatch extends React.Component {
                   await this.getPropositions();
                 }}
               />
-              <Button
-                intent="danger"
+              <CancelConfirm
                 marginLeft={16}
-                iconBefore="trash"
-                onClick={async e => {
-                  await actions.cancelMatch({matchid: match.id})
-                  await this.getPropositions();
-                  // this.toggleShown()
+                onConfirm={async () => {
+                  await actions.cancelMatch({ matchid: match.id });
+                  this.toggleShown();
                 }}
               >
                 Cancel
-              </Button>
+              </CancelConfirm>
             </Pane>
           </Pane>
 

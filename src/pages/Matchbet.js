@@ -122,7 +122,7 @@ class Macthes extends React.Component {
               await actions.createMatch(match);
               await this.getMatches();
             }}
-          />
+          >Create Match</MatchEditor>
           <Pane width={1} flex={1} />
           <SearchInput
             placeholder="Search..."
@@ -138,7 +138,7 @@ class Macthes extends React.Component {
             </Pane>
           ) : (
             <DataTable
-              Edit={EditMatch}
+              Edit={props => <EditMatch {...props} onClose={this.getMatches} />}
               actions={actions}
               columns={columns}
               rows={searchResults.length > 0 ? searchResults : matches}
