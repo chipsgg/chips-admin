@@ -75,13 +75,7 @@ class CreateProposition extends React.Component {
               value={match}
               onChange={match => this.setState({ match })}
               editorProps={{ $blockScrolling: true }}
-              setOptions={{
-                enableBasicAutocompletion: true,
-                enableLiveAutocompletion: true,
-                enableSnippets: true,
-                showLineNumbers: true,
-                tabSize: 2
-              }}
+              tabSize={2}
             />
           </Pane>
         </Dialog>

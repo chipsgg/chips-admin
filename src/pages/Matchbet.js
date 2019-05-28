@@ -116,7 +116,13 @@ class Macthes extends React.Component {
           >
             Refresh
           </Button>
-          <MatchEditor onConfirm={actions.createMatch} />
+          <MatchEditor
+            onConfirm={async match => {
+              match = JSON.parse(match);
+              await actions.createMatch(match);
+              await this.getMatches();
+            }}
+          />
           <Pane width={1} flex={1} />
           <SearchInput
             placeholder="Search..."
