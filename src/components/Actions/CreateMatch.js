@@ -62,16 +62,34 @@ class CreateMatch extends React.Component {
               <option value="bar">lol</option>
             </SelectField>
             <TextInputField
-              label="Name"
-              description="Name of the match"
-              placeholder="Series B: Quarter Finals"
-              // value={name}
-              // onChange={e => this.setState({ name: e.target.value })}
-            />
-            <TextInputField
               label="Start Time"
               description="When does this match begin?"
               placeholder="2019-05-28T21:00:00Z"
+              // value={name}
+              // onChange={e => this.setState({ name: e.target.value })}
+            />
+            <Autocomplete
+              // title="Opponent 1"
+              // onChange={changedItem => console.log(changedItem)}
+              items={['Apple', 'Apricot', 'Banana', 'Cherry', 'Cucumber']}
+              children={props => {
+                const { getInputProps, getRef, inputValue } = props
+                return (
+                  <TextInputField
+                    label="Leauge"
+                    description="Name of the Leauge."
+                    placeholder="DreamHack"
+                    value={inputValue}
+                    innerRef={getRef}
+                    {...getInputProps()}
+                  />
+                )
+              }}
+            />
+            <TextInputField
+              label="Name"
+              description="Name of the match"
+              placeholder="Series B: Quarter Finals"
               // value={name}
               // onChange={e => this.setState({ name: e.target.value })}
             />
