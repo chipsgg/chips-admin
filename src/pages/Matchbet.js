@@ -14,6 +14,7 @@ import DataTable from "../components/DataTable";
 import { sortBy, debounce } from "lodash";
 import MatchEditor from "../components/Actions/MatchEditor";
 import EditMatch from "../components/Actions/EditMatch";
+import CreateMatch from "../components/Actions/CreateMatch";
 
 class Macthes extends React.Component {
   constructor(props) {
@@ -116,13 +117,14 @@ class Macthes extends React.Component {
           >
             Refresh
           </Button>
-          <MatchEditor
+          <CreateMatch />
+          {/* <MatchEditor
             onConfirm={async match => {
               match = JSON.parse(match);
               await actions.createMatch(match);
               await this.getMatches();
             }}
-          >Create Match</MatchEditor>
+          >Create Match</MatchEditor> */}
           <Pane width={1} flex={1} />
           <SearchInput
             placeholder="Search..."
