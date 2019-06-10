@@ -21,6 +21,10 @@ export default baseURL => {
     async signup(params) {
       const { data } = await api.post(`/local/signup`, params);
       return data;
+    },
+    async logout(params) {
+      localStorage.setItem('token', null)
+      location.reload()
     }
   };
 };
