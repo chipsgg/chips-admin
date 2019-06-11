@@ -52,7 +52,6 @@ const Login = ({ onConfirm }) => {
             disabled={loading}
             required={true}
             label="Username"
-            description="Your unique username."
             placeholder="tacyarg"
             value={login}
             onChange={e => setState({ login: e.target.value })}
@@ -62,7 +61,6 @@ const Login = ({ onConfirm }) => {
             disabled={loading}
             required={true}
             label="Password"
-            description="Please use a combination of special characters."
             placeholder="**********"
             value={password}
             onChange={e => {

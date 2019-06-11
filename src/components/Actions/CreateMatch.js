@@ -13,6 +13,8 @@ import {
   TextInput,
 } from 'evergreen-ui'
 
+import lodash from 'lodash'
+
 const GameSelector = ({ onChange }) => {
   return (
     <SelectField
@@ -30,17 +32,53 @@ const GameSelector = ({ onChange }) => {
   )
 }
 
-const CreateMatch = ({ onConfirm }) => {
+const CreateMatch = ({ actions, onConfirm }) => {
   const [showConfirmation, setShowConfirmation] = useState(false)
-  const [game, setGame] = useState(null)
-  const [selections, setSelections] = useState([])
+
+  const [game, setGame] = useState('')
+  const [date, setDate] = useState('2019-05-28')
+  const [time, setTime] = useState('21:00')
+  const [league, setleague] = useState('')
+  const [name, setName] = useState('')
+  const [oppo1, setOppo1] = useState('')
+  const [oppo2, setOppo2] = useState('')
+
+  const [availTeams, setAvailTeams] = useState([])
+  const [availLeagues, setAvailLeagues] = useState([])
+
+  function searchTeams(search = '') {
+    return actions.searchMatchTeams({ search }).then(teams => {
+      teams = teams.map(x => x.name)
+      console.log(teams)
+      return setAvailTeams(teams)
+    })
+  }
+
+  function searchLeagues(search = '') {
+    return actions.searchMatchLeagues({ search }).then(leagues => {
+      leagues = leagues.map(x => x.name)
+      console.log(leagues)
+      return setAvailLeagues(leagues)
+    })
+  }
+  
+  const debounceSearchTeams = lodash.debounce(searchTeams, 500)
+  const debounceSearchLeagues = lodash.debounce(searchLeagues, 500)
+
+  useEffect(() => {
+    searchTeams()
+    searchLeagues()
+  }, [])
 
   const submit = async () => {
     toaster.notify('Creating Match...')
     if (onConfirm) {
       await onConfirm({
+        game,
+        startTime: `${date}T${time}:00Z`,
+        league,
         name,
-        selections,
+        selections: [oppo1, oppo2],
       })
         .then(resp => toaster.success('Match Created!'))
         .catch(err => toaster.danger(err.message))
@@ -62,26 +100,40 @@ const CreateMatch = ({ onConfirm }) => {
         <Pane>
           <GameSelector onChange={setGame} />
           <TextInputField
+            type="date"
+            label="Start Date"
+            description="What Date does this match begin on?"
+            placeholder="2019-05-28"
+            value={date}
+            onChange={e => setDate(e.target.value)}
+          />
+          <TextInputField
+            type="time"
             label="Start Time"
             description="When does this match begin?"
-            placeholder="2019-05-28T21:00:00Z"
-            // value={name}
-            // onChange={e => this.setState({ name: e.target.value })}
+            placeholder="21:00 PM"
+            value={time}
+            onChange={e => setTime(e.target.value)}
           />
           <Autocomplete
-            // title="Opponent 1"
-            // onChange={changedItem => console.log(changedItem)}
-            items={['Apple', 'Apricot', 'Banana', 'Cherry', 'Cucumber']}
+            value={league}
+            onChange={v => setleague(v)}
+            items={availLeagues}
             children={props => {
               const { getInputProps, getRef, inputValue } = props
+              const inputProps = getInputProps()
               return (
                 <TextInputField
-                  label="Leauge"
-                  description="Name of the Leauge."
+                  label="League"
+                  description="Name of the league."
                   placeholder="DreamHack"
                   value={inputValue}
                   innerRef={getRef}
-                  {...getInputProps()}
+                  {...inputProps}
+                  onChange={e => {
+                    debounceSearchLeagues(e.target.value)
+                    inputProps.onChange(e)
+                  }}
                 />
               )
             }}
@@ -90,14 +142,16 @@ const CreateMatch = ({ onConfirm }) => {
             label="Name"
             description="Name of the match"
             placeholder="Series B: Quarter Finals"
-            // value={name}
-            // onChange={e => this.setState({ name: e.target.value })}
+            value={name}
+            onChange={e => setName(e.target.value)}
           />
           <Autocomplete
-            // onChange={changedItem => console.log(changedItem)}
-            items={['Apple', 'Apricot', 'Banana', 'Cherry', 'Cucumber']}
+            onChange={o => setOppo1(o)}
+            items={availTeams}
+            value={oppo1}
             children={props => {
               const { getInputProps, getRef, inputValue } = props
+              const inputProps = getInputProps()
               return (
                 <TextInputField
                   label="Opponent 1"
@@ -105,16 +159,22 @@ const CreateMatch = ({ onConfirm }) => {
                   placeholder="Cloud9"
                   value={inputValue}
                   innerRef={getRef}
-                  {...getInputProps()}
+                  {...inputProps}
+                  onChange={e => {
+                    debounceSearchTeams(e.target.value)
+                    inputProps.onChange(e)
+                  }}
                 />
               )
             }}
           />
           <Autocomplete
-            // onChange={changedItem => console.log(changedItem)}
-            items={['Apple', 'Apricot', 'Banana', 'Cherry', 'Cucumber']}
+            onChange={o => setOppo2(o)}
+            items={availTeams}
+            value={oppo2}
             children={props => {
               const { getInputProps, getRef, inputValue } = props
+              const inputProps = getInputProps()
               return (
                 <TextInputField
                   label="Opponent 2"
@@ -122,7 +182,11 @@ const CreateMatch = ({ onConfirm }) => {
                   placeholder="Fnatic"
                   value={inputValue}
                   innerRef={getRef}
-                  {...getInputProps()}
+                  {...inputProps}
+                  onChange={e => {
+                    debounceSearchTeams(e.target.value)
+                    inputProps.onChange(e)
+                  }}
                 />
               )
             }}

@@ -117,7 +117,7 @@ class Macthes extends React.Component {
           >
             Refresh
           </Button>
-          <CreateMatch />
+          <CreateMatch actions={actions} />
           {/* <MatchEditor
             onConfirm={async match => {
               match = JSON.parse(match);
