@@ -15,33 +15,16 @@ import {
 
 import lodash from 'lodash'
 
-const GameSelector = ({ onChange }) => {
-  return (
-    <SelectField
-      label="Game"
-      required
-      description="The game the match belongs to."
-      onChange={event => onChange(event.target.value)}
-    >
-      <option value="foo" defaultValue>
-        csgo
-      </option>
-      <option value="bar">dota2</option>
-      <option value="bar">lol</option>
-    </SelectField>
-  )
-}
-
 const CreateMatch = ({ actions, onConfirm }) => {
   const [showConfirmation, setShowConfirmation] = useState(false)
 
-  const [game, setGame] = useState('')
+  const [game, setGame] = useState('csgo')
   const [date, setDate] = useState('2019-05-28')
   const [time, setTime] = useState('21:00')
   const [league, setleague] = useState('')
   const [name, setName] = useState('')
-  const [oppo1, setOppo1] = useState('')
-  const [oppo2, setOppo2] = useState('')
+  const [opponentOne, setOpponentOne] = useState('')
+  const [opponentTwo, setOpponentTwo] = useState('')
 
   const [availTeams, setAvailTeams] = useState([])
   const [availLeagues, setAvailLeagues] = useState([])
@@ -61,7 +44,7 @@ const CreateMatch = ({ actions, onConfirm }) => {
       return setAvailLeagues(leagues)
     })
   }
-  
+
   const debounceSearchTeams = lodash.debounce(searchTeams, 500)
   const debounceSearchLeagues = lodash.debounce(searchLeagues, 500)
 
@@ -72,14 +55,17 @@ const CreateMatch = ({ actions, onConfirm }) => {
 
   const submit = async () => {
     toaster.notify('Creating Match...')
+    const data = {
+      game,
+      startTime: `${date}T${time}:00Z`,
+      league,
+      name,
+      opponentOne, 
+      opponentTwo
+    }
+    console.log(data)
     if (onConfirm) {
-      await onConfirm({
-        game,
-        startTime: `${date}T${time}:00Z`,
-        league,
-        name,
-        selections: [oppo1, oppo2],
-      })
+      await onConfirm(data)
         .then(resp => toaster.success('Match Created!'))
         .catch(err => toaster.danger(err.message))
     }
@@ -98,7 +84,29 @@ const CreateMatch = ({ actions, onConfirm }) => {
         intent="success"
       >
         <Pane>
-          <GameSelector onChange={setGame} />
+        <Autocomplete
+            onChange={o => setGame(o)}
+            items={['csgo', 'dota2', 'lol']}
+            value={game}
+            children={props => {
+              const { getInputProps, getRef, inputValue } = props
+              const inputProps = getInputProps()
+              return (
+                <TextInputField
+                  label="Game"
+                  description="Name of the esport title."
+                  placeholder="csgo"
+                  value={inputValue}
+                  innerRef={getRef}
+                  {...inputProps}
+                  onChange={e => {
+                    // debounceSearchTeams(e.target.value)
+                    inputProps.onChange(e)
+                  }}
+                />
+              )
+            }}
+          />
           <TextInputField
             type="date"
             label="Start Date"
@@ -146,9 +154,9 @@ const CreateMatch = ({ actions, onConfirm }) => {
             onChange={e => setName(e.target.value)}
           />
           <Autocomplete
-            onChange={o => setOppo1(o)}
+            onChange={o => setOpponentOne(o)}
             items={availTeams}
-            value={oppo1}
+            value={opponentOne}
             children={props => {
               const { getInputProps, getRef, inputValue } = props
               const inputProps = getInputProps()
@@ -169,9 +177,9 @@ const CreateMatch = ({ actions, onConfirm }) => {
             }}
           />
           <Autocomplete
-            onChange={o => setOppo2(o)}
+            onChange={o => setOpponentTwo(o)}
             items={availTeams}
-            value={oppo2}
+            value={opponentTwo}
             children={props => {
               const { getInputProps, getRef, inputValue } = props
               const inputProps = getInputProps()

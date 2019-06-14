@@ -117,14 +117,10 @@ class Macthes extends React.Component {
           >
             Refresh
           </Button>
-          <CreateMatch actions={actions} />
-          {/* <MatchEditor
-            onConfirm={async match => {
-              match = JSON.parse(match);
-              await actions.createMatch(match);
-              await this.getMatches();
-            }}
-          >Create Match</MatchEditor> */}
+          <CreateMatch actions={actions} onConfirm={async params => {
+            await actions.createMatch(params);
+            await this.getMatches();
+          }} />
           <Pane width={1} flex={1} />
           <SearchInput
             placeholder="Search..."
@@ -139,14 +135,14 @@ class Macthes extends React.Component {
               <Spinner />
             </Pane>
           ) : (
-            <DataTable
-              Edit={props => <EditMatch {...props} onClose={this.getMatches} />}
-              actions={actions}
-              columns={columns}
-              rows={searchResults.length > 0 ? searchResults : matches}
-              onSelect={this.onSelect}
-            />
-          )}
+              <DataTable
+                Edit={props => <EditMatch {...props} onClose={this.getMatches} />}
+                actions={actions}
+                columns={columns}
+                rows={searchResults.length > 0 ? searchResults : matches}
+                onSelect={this.onSelect}
+              />
+            )}
         </Pane>
       </Pane>
     );

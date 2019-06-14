@@ -11,14 +11,15 @@ import Layout from "./Layout";
 
 const main = async () => {
   // let actions = await Actions("https://api.chips.gg");
-  let actions = await Actions("https://api.322esport.com");
+  // let actions = await Actions("https://api.322esport.com");
+  let actions = await Actions("http://45.63.17.87:9991");
 
   const user = await Authenticate(actions)
-  console.log(user)
 
   // kinda hacky
   // const auth = Auth("https://auth.chips.gg");
-  const auth = Auth("https://auth.322esport.com");
+  // const auth = Auth("https://auth.322esport.com");
+  const auth = Auth("http://45.63.17.87:9993");
 
   actions = {...actions, ...auth}
 
