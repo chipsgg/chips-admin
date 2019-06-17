@@ -29,7 +29,7 @@
     "predeploy": "rm -rf dist &&  parcel build index.html --out-dir dist",
     "deploy": "gh-pages -d dist",
     "start": "parcel index.html",
-    "build": "parcel build index.html --out-dir dist && yarn deletemaps",
+    "build": "parcel build index.html --out-dir dist",
     "deletemaps": "find . -type f -name *.map -delete"
   }
 }

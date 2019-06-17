@@ -1,9 +1,21 @@
-import React from 'react'
+import React from "react";
+
+import {
+  Pane,
+  Spinner,
+  Text,
+  Dialog,
+  Heading,
+  Button,
+  Tablist,
+  Tab,
+  SearchInput
+} from "evergreen-ui";
 
 const NotFound = () => (
-  <div className="hero is-dark">
-    <h1 className="title">404</h1>
-    <h2 className="subtitle">Not Found</h2>
-  </div>
-)
-export default NotFound
+  <Pane padding={4} width={"100%"} display="flex" flexDirection="column">
+    <Heading>404</Heading>
+    <Text>Not Found</Text>
+  </Pane>
+);
+export default NotFound;

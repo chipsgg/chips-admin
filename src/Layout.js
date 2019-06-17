@@ -7,10 +7,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import SideMenu from "./components/SideMenu";
 
-import NotFound from "./pages/NotFound";
-import Home from "./pages/Home";
-import Matchbet from "./pages/Matchbet";
-import Users from "./pages/Users";
+import Pages from "./pages";
 
 const Layout = ({ actions, user }) => (
   <HashRouter>
@@ -21,28 +18,18 @@ const Layout = ({ actions, user }) => (
         <Switch>
           <Redirect exact from="/" to="/home" />
 
-          <Route
-            path="/home"
-            render={props => {
-              return <Home actions={actions} />;
-            }}
-          />
-
-          <Route
-            path="/matchbet"
-            render={props => {
-              return <Matchbet actions={actions} />;
-            }}
-          />
-
-          <Route
-            path="/users"
-            render={props => {
-              return <Users actions={actions} />;
-            }}
-          />
-
-          <Route component={NotFound} />
+          {Object.keys(Pages).map(pageKey => {
+            const Page = Pages[pageKey];
+            if (pageKey === "NotFound") return <Route component={Page} />;
+            return (
+              <Route
+                path={`/${pageKey}`}
+                render={props => {
+                  return <Page actions={actions} />;
+                }}
+              />
+            );
+          })}
         </Switch>
       </Pane>
       <Footer />

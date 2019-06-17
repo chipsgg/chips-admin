@@ -1,152 +1,72 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Pane,
-  Spinner,
-  Text,
-  Dialog,
-  Heading,
-  Button,
-  Tablist,
-  Tab,
-  SearchInput
 } from "evergreen-ui";
-import DataTable from "../components/DataTable";
+
 import { sortBy, debounce } from "lodash";
+
 import MatchEditor from "../components/Actions/MatchEditor";
 import EditMatch from "../components/Actions/EditMatch";
 import CreateMatch from "../components/Actions/CreateMatch";
+import TablePage from "../components/TablePage";
 
-class Macthes extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loading: true,
-      columns: [
-        ["ID", "id"],
-        ["Opponents", "opponents", "opponents"],
-        // ["Value", "value", 'number'],
-        ["Status", "state", "state"],
-        ["Provider", "provider"],
-        ["Start Time", "startTime", "time"]
-      ],
-      tabs: ["Matches", "Propositions", "Users"],
-      selectedTab: "Matches",
-      matches: [],
-      searchTerm: "",
-      searchResults: []
-    };
-  }
+const TableActions = ({ actions }) => {
+  return (
+    <>
+      <CreateMatch
+        actions={actions}
+        onConfirm={async params => {
+          await actions.createMatch(params);
+          await this.getMatches();
+        }}
+      />
+    </>
+  );
+};
 
-  componentDidMount() {
-    this.getMatches();
-  }
+const Macthes = ({ actions }) => {
+  const columns = [
+    ["ID", "id"],
+    ["Opponents", "opponents", "opponents"],
+    // ["Value", "value", 'number'],
+    ["Status", "state", "state"],
+    ["Provider", "provider"],
+    ["Start Time", "startTime", "time"]
+  ];
 
-  getMatches = async () => {
-    this.setState({ loading: true });
-    const { actions } = this.props;
-    const list = await actions.listAvailableMatchesWithPropositions();
-    console.log(list);
-    this.setState({
-      loading: false,
-      matches: sortBy(list, "startTime")
-    });
-  };
+  const [state, setState] = useState({
+    tabs: ["Matches", "Propositions", "Users"],
+    selectedTab: "Matches"
+  });
 
-  onSearch = e => {
-    const { matches } = this.state;
-    const searchTerm = e.target.value.toLowerCase();
-
-    this.setState({
-      searchTerm,
-      searchResults: matches.filter(match => {
-        console.log(match);
-
-        const props = [
-          match.id,
-          match.name.toLowerCase(),
-          match.provider,
-          match.state,
-          match.game
-        ];
-
-        return props.find(prop => prop.includes(searchTerm));
-      })
-    });
-  };
-
-  render() {
-    const {
-      loading,
-      columns,
-      matches,
-      tabs,
-      selectedTab,
-      searchTerm,
-      searchResults
-    } = this.state;
-    const { actions } = this.props;
-    return (
-      <Pane width={"100%"} display="flex" flexDirection="column">
-        {/* <Pane display="flex" padding={8}>
-          <Tablist>
-            {tabs.map(tab => (
-              <Tab
-                key={tab}
-                isSelected={selectedTab === tab}
-                onSelect={() => this.setState({ selectedTab: tab })}
-              >
-                {tab}
-              </Tab>
-            ))}
-          </Tablist>
-        </Pane> */}
-        <Pane
-          width={"100%"}
-          borderBottom
-          // borderTop
-          display="flex"
-          padding={16}
-          background="tint1"
-          alignItems="center"
-        >
-          <Heading size={300}>Actions:</Heading>
-          <Button
-            onClick={this.getMatches}
-            iconBefore="refresh"
-            marginLeft={16}
-          >
-            Refresh
-          </Button>
-          <CreateMatch actions={actions} onConfirm={async params => {
-            await actions.createMatch(params);
-            await this.getMatches();
-          }} />
-          <Pane width={1} flex={1} />
-          <SearchInput
-            placeholder="Search..."
-            onChange={this.onSearch}
-            value={searchTerm}
-          />
-        </Pane>
-
-        <Pane display="flex" alignItems="center" justifyContent="center">
-          {loading ? (
-            <Pane padding={32}>
-              <Spinner />
-            </Pane>
-          ) : (
-              <DataTable
-                Edit={props => <EditMatch {...props} onClose={this.getMatches} />}
-                actions={actions}
-                columns={columns}
-                rows={searchResults.length > 0 ? searchResults : matches}
-                onSelect={this.onSelect}
-              />
-            )}
-        </Pane>
-      </Pane>
-    );
-  }
-}
+  return (
+    <Pane width={"100%"} display="flex" flexDirection="column">
+      {/* <Pane display="flex" padding={8}>
+        <Tablist>
+          {state.tabs.map(tab => (
+            <Tab
+              key={tab}
+              isSelected={state.selectedTab === tab}
+              onSelect={() => this.setState({ selectedTab: tab })}
+            >
+              {tab}
+            </Tab>
+          ))}
+        </Tablist>
+      </Pane> */}
+      <TablePage
+        actions={actions}
+        columns={columns}
+        listFunc={e => {
+          return actions
+            .listAvailableMatchesWithPropositions()
+            .then(list => sortBy(list, "startTime"));
+        }}
+        editFunc={EditMatch}
+        tableActions={<TableActions actions={actions} />}
+      />
+    </Pane>
+  );
+};
 
 export default Macthes;
