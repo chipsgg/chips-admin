@@ -3,16 +3,16 @@ import { withRouter } from "react-router-dom";
 
 import { Pane, Heading, Menu } from "evergreen-ui";
 
+import Pages from '../pages'
+
 class SideMenu extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      options: [
-        { label: "Home", value: "/home" },
-        { label: "Matchbet", value: "/matchbet" },
-        { label: "Users", value: "/users" }
-      ],
+      options: Object.keys(Pages).map(key => {
+        return { label: key, value: `/${key}` }
+      }),
       selected: props.location.pathname
     };
   }

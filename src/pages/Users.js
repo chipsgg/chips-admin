@@ -8,6 +8,7 @@ const Users = ({actions}) => {
 
   const columns = [
     ['ID', 'id'],
+    ['Login', 'login'],
     ['Username', 'username'],
     // ["Balance", "balance", "number"],
     // ["Can Withdraw", "canWithdraw", "boolean"],

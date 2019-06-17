@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Pane,
-} from "evergreen-ui";
+import { Pane } from "evergreen-ui";
 
 import { sortBy, debounce } from "lodash";
 

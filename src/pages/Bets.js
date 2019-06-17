@@ -4,13 +4,15 @@ import { Pane, Heading, Button, Spinner, SearchInput } from "evergreen-ui";
 import TablePage from "../components/TablePage";
 // import EditUser from '../components/Actions/EditUser/EditUser'
 
-const Users = ({ actions }) => {
+const Bets = ({ actions }) => {
   const columns = [
-    ["ID", "id"]
-    // ['Username', 'username'],
-    // ["Balance", "balance", "number"],
-    // ["Can Withdraw", "canWithdraw", "boolean"],
-    // ["Can Deposit", "canDeposit", 'boolean']
+    ["ID", "id"],
+    ['Propositionid', 'propositionid'],
+    ["Type", "type"],
+    ["State", "state"],
+    ["Selection", "selection"],
+    ["Amount", "amount", "number"],
+    
   ];
 
   return (
@@ -23,4 +25,4 @@ const Users = ({ actions }) => {
   );
 };
 
-export default Users;
+export default Bets;
