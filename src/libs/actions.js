@@ -19,7 +19,9 @@ export default async baseURL => {
     return {
       ...memo,
       [action]: async params => {
-        const { data } = await api.post(`/${action}`, params);
+        const { data } = await api.post(`/${action}`, params).catch(e => {
+          throw new Error(e.response.data);
+        });
         return data;
       }
     };

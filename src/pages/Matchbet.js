@@ -13,10 +13,7 @@ const TableActions = ({ actions }) => {
     <>
       <CreateMatch
         actions={actions}
-        onConfirm={async params => {
-          await actions.createMatch(params);
-          await this.getMatches();
-        }}
+        onConfirm={actions.createMatch}
       />
     </>
   );

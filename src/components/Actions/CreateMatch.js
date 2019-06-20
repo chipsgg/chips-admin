@@ -57,7 +57,7 @@ const CreateMatch = ({ actions, onConfirm }) => {
     toaster.notify('Creating Match...')
     const data = {
       game,
-      startTime: `${date}T${time}:00Z`,
+      startTime: Date.parse(`${date}T${time}:00Z`),
       league,
       name,
       opponentOne, 

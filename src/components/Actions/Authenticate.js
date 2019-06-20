@@ -34,10 +34,15 @@ const Login = ({ onConfirm }) => {
     setState({ showConfirmation: false, loading: false })
   }
 
+  const handleKeyPress = event => {
+    if (event.key != 'Enter') return
+    submitRequest()
+  }
+
   const { showConfirmation, login, password, loading } = state
 
   return (
-    <Pane>
+    <Pane onKeyDown={handleKeyPress}>
       <Dialog
         title="Login"
         isShown={showConfirmation}
