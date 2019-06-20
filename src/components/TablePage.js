@@ -1,7 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { Pane, Heading, Button, Spinner, SearchInput } from "evergreen-ui";
 import DataTable from "./DataTable";
-import { debounce } from "lodash";
+
+function useDebounce(value, delay = 500) {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    // Set debouncedValue to value (passed in) after the specified delay
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value]);
+
+  return debouncedValue;
+}
 
 const TablePage = ({
   actions,
@@ -29,10 +45,13 @@ const TablePage = ({
   useEffect(populateList, []);
 
   const onSearch = value => {
+    if (searchTerm.length < 2) return;
+    console.log("searching...");
+    setLoading(true);
+
     const searchResults = list.filter(row => {
       return columns.find(([label, prop, type]) => {
         // console.log(row[prop], searchTerm);
-        console.log("searching...")
         return row[prop]
           .toString()
           .toLowerCase()
@@ -40,10 +59,12 @@ const TablePage = ({
       });
     });
 
+    setLoading(false);
     return setSeachResults(searchResults);
   };
 
-  const debounceSearch = debounce(onSearch, 1000);
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+  useEffect(onSearch, [debouncedSearchTerm]);
 
   return (
     <Pane width={"100%"} display="flex" flexDirection="column">
@@ -65,8 +86,8 @@ const TablePage = ({
         <SearchInput
           placeholder="Search..."
           onChange={({ target }) => {
-            setSearchTerm(target.value);
-            return debounceSearch();
+            setSearchTerm(target.value.toString().toLowerCase());
+            // return debounceSearch();
           }}
           value={searchTerm}
         />
