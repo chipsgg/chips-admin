@@ -33,6 +33,7 @@ const TablePage = ({
 
   const populateList = () => {
     setLoading(true);
+    setSearchTerm('')
     listFunc()
       .then(list => {
         setLoading(false);
