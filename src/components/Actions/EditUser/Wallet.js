@@ -64,7 +64,7 @@ class EditMatch extends React.Component {
                 <Heading>Wallet</Heading>
               </Pane>
               <Pane display="flex" flexDirection="row">
-                <Tooltip content="Cancel">
+                <Tooltip content="Refresh">
                   <IconButton
                     marginLeft={16}
                     icon="refresh"

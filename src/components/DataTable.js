@@ -23,12 +23,10 @@ class MatchTable extends React.Component {
       case "opponents":
         return (
           <Table.TextCell key={key}>
-            {
-              data.reduce((memo, row, index) => {
-                memo += index < 1 ? `${row.name} vs. ` : row.name
-                return memo
-              }, '')
-            }
+            {data.reduce((memo, row, index) => {
+              memo += index < 1 ? `${row.name} vs. ` : row.name;
+              return memo;
+            }, "")}
           </Table.TextCell>
         );
 
@@ -60,7 +58,9 @@ class MatchTable extends React.Component {
           {columns.map(([key, value]) => (
             <Table.TextHeaderCell key={key}>{key}</Table.TextHeaderCell>
           ))}
-          <Table.TextHeaderCell key={"Actions"}>Actions</Table.TextHeaderCell>
+          {Edit && (
+            <Table.TextHeaderCell key={"Actions"}>Actions</Table.TextHeaderCell>
+          )}
         </Table.Head>
         <Table.Body>
           {rows.map(row => (
@@ -70,12 +70,14 @@ class MatchTable extends React.Component {
                 key = index + key + data;
                 return this.renderCellType(key, data, type);
               })}
-              {Edit ? (
+
+              {Edit && (
                 <Table.Cell>
-                  <Edit row={row} actions={actions} />
+                  {Edit({
+                    row,
+                    actions
+                  })}
                 </Table.Cell>
-              ) : (
-                <Table.TextCell>n/a</Table.TextCell>
               )}
             </Table.Row>
           ))}

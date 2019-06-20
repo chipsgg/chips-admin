@@ -10,7 +10,7 @@ import {
 
 const Confirmation = ({ showConfirmation = false, onConfirm, setState }) => (
   <CornerDialog
-    title="This will refund all bets!"
+    title="Are you sure?"
     isShown={showConfirmation}
     onCloseComplete={() => setState({ showConfirmation: false })}
     onConfirm={onConfirm}
@@ -46,10 +46,10 @@ class CancelConfirm extends React.Component {
             this.setState(state);
           }}
           onConfirm={async () => {
-            toaster.notify("Canceling Proposition...");
+            toaster.notify("Canceling...");
             if (onConfirm) {
               await onConfirm()
-                .then(resp => toaster.success("Proposition Canceled!"))
+                .then(resp => toaster.success("Canceled!"))
                 .catch(err => toaster.danger(err.message));
             }
             this.setState({ showConfirmation: false });

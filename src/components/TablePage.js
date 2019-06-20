@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Pane, Heading, Button, Spinner, SearchInput } from "evergreen-ui";
 import DataTable from "./DataTable";
+import { debounce } from "lodash";
 
 const TablePage = ({
   actions,
@@ -9,61 +10,40 @@ const TablePage = ({
   editFunc,
   tableActions
 }) => {
-  const [state, setState] = useState({
-    columns,
-    loading: true,
-    list: [],
-    searchTerm: "",
-    searchResults: []
-  });
-
-  console.log("page render:", state);
-
-  const updateStateProp = (prop, data) => {
-    return setState({ ...state, [prop]: data });
-  };
-
-  const mergeState = newState => {
-    return setState({
-      ...state,
-      ...newState
-    });
-  };
+  const [loading, setLoading] = useState(true);
+  const [list, setList] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSeachResults] = useState([]);
 
   const populateList = () => {
-    updateStateProp("loading", true);
+    setLoading(true);
     listFunc()
-      .then(list =>
-        mergeState({
-          loading: false,
-          list
-        })
-      )
+      .then(list => {
+        setLoading(false);
+        setList(list);
+      })
       .catch(console.error);
   };
 
   // populate the page list
   useEffect(populateList, []);
 
-  const onSearch = e => {
-    const searchTerm = e.target.value.toLowerCase();
-
-    const searchResults = state.list.filter(row => {
+  const onSearch = value => {
+    const searchResults = list.filter(row => {
       return columns.find(([label, prop, type]) => {
-        // console.log(row[prop], state.searchTerm);
-        try {
-          return row[prop].toLowerCase().includes(state.searchTerm);
-        } catch (e) {
-          return row[prop].includes(state.searchTerm);
-        }
+        // console.log(row[prop], searchTerm);
+        console.log("searching...")
+        return row[prop]
+          .toString()
+          .toLowerCase()
+          .includes(searchTerm);
       });
     });
 
-    return mergeState({
-      searchTerm,
-      searchResults
-    });
+    return setSeachResults(searchResults);
   };
+
+  const debounceSearch = debounce(onSearch, 1000);
 
   return (
     <Pane width={"100%"} display="flex" flexDirection="column">
@@ -84,8 +64,11 @@ const TablePage = ({
         <Pane width={1} flex={1} />
         <SearchInput
           placeholder="Search..."
-          onChange={onSearch}
-          value={state.searchTerm}
+          onChange={({ target }) => {
+            setSearchTerm(target.value);
+            return debounceSearch();
+          }}
+          value={searchTerm}
         />
       </Pane>
       <Pane
@@ -94,16 +77,14 @@ const TablePage = ({
         alignItems="center"
         justifyContent="center"
       >
-        {state.loading ? (
+        {loading ? (
           <Pane padding={32}>
             <Spinner />
           </Pane>
         ) : (
           <DataTable
-            columns={state.columns}
-            rows={
-              state.searchTerm.length > 0 ? state.searchResults : state.list
-            }
+            columns={columns}
+            rows={searchTerm.length > 0 ? searchResults : list}
             actions={actions}
             Edit={editFunc}
           />

@@ -57,7 +57,7 @@ const Macthes = ({ actions }) => {
             .listAvailableMatchesWithPropositions()
             .then(list => sortBy(list, "startTime"));
         }}
-        editFunc={EditMatch}
+        editFunc={p => <EditMatch {...p} />}
         tableActions={<TableActions actions={actions} />}
       />
     </Pane>
