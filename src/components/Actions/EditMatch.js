@@ -99,7 +99,9 @@ class EditMatch extends React.Component {
                   await actions.editMatch(match);
                   await this.getPropositions();
                 }}
-              >Edit Match</MatchEditor>
+              >
+                Edit Match
+              </MatchEditor>
               <CreateProposition
                 onConfirm={async params => {
                   await actions.createProposition({
@@ -210,7 +212,12 @@ class EditMatch extends React.Component {
                     </ListItem>
                     <ListItem>
                       <Strong>Value: </Strong>
-                      <Badge>${proposition.value}</Badge>
+                      <Badge>
+                        {proposition.value.toLocaleString("en-US", {
+                          style: "currency",
+                          currency: "USD"
+                        })}
+                      </Badge>
                     </ListItem>
                     <ListItem>
                       <Strong>State: </Strong>

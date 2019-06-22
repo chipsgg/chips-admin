@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from "react";
 import {
   Pane,
   Button,
@@ -10,67 +10,74 @@ import {
   Text,
   SelectField,
   Autocomplete,
-  TextInput,
-} from 'evergreen-ui'
+  TextInput
+} from "evergreen-ui";
 
-import lodash from 'lodash'
+import lodash from "lodash";
+
+import moment from "moment";
+import timezone from "moment-timezone";
 
 const CreateMatch = ({ actions, onConfirm }) => {
-  const [showConfirmation, setShowConfirmation] = useState(false)
+  timezone.tz.guess(); // set relevant timezone
 
-  const [game, setGame] = useState('csgo')
-  const [date, setDate] = useState('2019-05-28')
-  const [time, setTime] = useState('21:00')
-  const [league, setleague] = useState('')
-  const [name, setName] = useState('')
-  const [opponentOne, setOpponentOne] = useState('')
-  const [opponentTwo, setOpponentTwo] = useState('')
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
-  const [availTeams, setAvailTeams] = useState([])
-  const [availLeagues, setAvailLeagues] = useState([])
+  const [game, setGame] = useState("csgo");
+  // const [date, setDate] = useState("2019-05-28");
+  // const [time, setTime] = useState("21:00");
+  const [startTime, setStartTime] = useState(0);
 
-  function searchTeams(search = '') {
+  const [league, setleague] = useState("");
+  const [name, setName] = useState("");
+  const [opponentOne, setOpponentOne] = useState("");
+  const [opponentTwo, setOpponentTwo] = useState("");
+
+  const [availTeams, setAvailTeams] = useState([]);
+  const [availLeagues, setAvailLeagues] = useState([]);
+
+  function searchTeams(search = "") {
     return actions.searchMatchTeams({ search }).then(teams => {
-      teams = teams.map(x => x.name)
-      console.log(teams)
-      return setAvailTeams(teams)
-    })
+      teams = teams.map(x => x.name);
+      console.log(teams);
+      return setAvailTeams(teams);
+    });
   }
 
-  function searchLeagues(search = '') {
+  function searchLeagues(search = "") {
     return actions.searchMatchLeagues({ search }).then(leagues => {
-      leagues = leagues.map(x => x.name)
-      console.log(leagues)
-      return setAvailLeagues(leagues)
-    })
+      leagues = leagues.map(x => x.name);
+      console.log(leagues);
+      return setAvailLeagues(leagues);
+    });
   }
 
-  const debounceSearchTeams = lodash.debounce(searchTeams, 500)
-  const debounceSearchLeagues = lodash.debounce(searchLeagues, 500)
+  const debounceSearchTeams = lodash.debounce(searchTeams, 500);
+  const debounceSearchLeagues = lodash.debounce(searchLeagues, 500);
 
   useEffect(() => {
-    searchTeams()
-    searchLeagues()
-  }, [])
+    searchTeams();
+    searchLeagues();
+  }, []);
 
   const submit = async () => {
-    toaster.notify('Creating Match...')
+    toaster.notify("Creating Match...");
     const data = {
       game,
-      startTime: Date.parse(`${date}T${time}:00Z`),
+      startTime: Date.now() + startTime * (1000 * 60),
       league,
       name,
-      opponentOne, 
+      opponentOne,
       opponentTwo
-    }
-    console.log(data)
+    };
+    console.log(data);
     if (onConfirm) {
       await onConfirm(data)
-        .then(resp => toaster.success('Match Created!'))
-        .catch(err => toaster.danger(err.message))
+        .then(resp => toaster.success("Match Created!"))
+        .catch(err => toaster.danger(err.message));
     }
-    setShowConfirmation(false)
-  }
+    setShowConfirmation(false);
+  };
 
   return (
     <Pane>
@@ -82,15 +89,16 @@ const CreateMatch = ({ actions, onConfirm }) => {
         confirmLabel="Create Match"
         cancelLabel="Oops, nevermind."
         intent="success"
+        shouldCloseOnOverlayClick={false}
       >
         <Pane>
-        <Autocomplete
+          <Autocomplete
             onChange={o => setGame(o)}
-            items={['csgo', 'dota2', 'lol']}
+            items={["csgo", "dota2", "lol"]}
             value={game}
             children={props => {
-              const { getInputProps, getRef, inputValue } = props
-              const inputProps = getInputProps()
+              const { getInputProps, getRef, inputValue } = props;
+              const inputProps = getInputProps();
               return (
                 <TextInputField
                   label="Game"
@@ -101,13 +109,21 @@ const CreateMatch = ({ actions, onConfirm }) => {
                   {...inputProps}
                   onChange={e => {
                     // debounceSearchTeams(e.target.value)
-                    inputProps.onChange(e)
+                    inputProps.onChange(e);
                   }}
                 />
-              )
+              );
             }}
           />
           <TextInputField
+            type="number"
+            label="Start Time"
+            description="How many MINUTES before the match begins?"
+            placeholder={48}
+            value={startTime}
+            onChange={e => setStartTime(parseInt(e.target.value))}
+          />
+          {/* <TextInputField
             type="date"
             label="Start Date"
             description="What Date does this match begin on?"
@@ -122,14 +138,14 @@ const CreateMatch = ({ actions, onConfirm }) => {
             placeholder="21:00 PM"
             value={time}
             onChange={e => setTime(e.target.value)}
-          />
+          /> */}
           <Autocomplete
             value={league}
             onChange={v => setleague(v)}
             items={availLeagues}
             children={props => {
-              const { getInputProps, getRef, inputValue } = props
-              const inputProps = getInputProps()
+              const { getInputProps, getRef, inputValue } = props;
+              const inputProps = getInputProps();
               return (
                 <TextInputField
                   label="League"
@@ -139,11 +155,11 @@ const CreateMatch = ({ actions, onConfirm }) => {
                   innerRef={getRef}
                   {...inputProps}
                   onChange={e => {
-                    debounceSearchLeagues(e.target.value)
-                    inputProps.onChange(e)
+                    debounceSearchLeagues(e.target.value);
+                    inputProps.onChange(e);
                   }}
                 />
-              )
+              );
             }}
           />
           <TextInputField
@@ -158,8 +174,8 @@ const CreateMatch = ({ actions, onConfirm }) => {
             items={availTeams}
             value={opponentOne}
             children={props => {
-              const { getInputProps, getRef, inputValue } = props
-              const inputProps = getInputProps()
+              const { getInputProps, getRef, inputValue } = props;
+              const inputProps = getInputProps();
               return (
                 <TextInputField
                   label="Opponent 1"
@@ -169,11 +185,11 @@ const CreateMatch = ({ actions, onConfirm }) => {
                   innerRef={getRef}
                   {...inputProps}
                   onChange={e => {
-                    debounceSearchTeams(e.target.value)
-                    inputProps.onChange(e)
+                    debounceSearchTeams(e.target.value);
+                    inputProps.onChange(e);
                   }}
                 />
-              )
+              );
             }}
           />
           <Autocomplete
@@ -181,8 +197,8 @@ const CreateMatch = ({ actions, onConfirm }) => {
             items={availTeams}
             value={opponentTwo}
             children={props => {
-              const { getInputProps, getRef, inputValue } = props
-              const inputProps = getInputProps()
+              const { getInputProps, getRef, inputValue } = props;
+              const inputProps = getInputProps();
               return (
                 <TextInputField
                   label="Opponent 2"
@@ -192,11 +208,11 @@ const CreateMatch = ({ actions, onConfirm }) => {
                   innerRef={getRef}
                   {...inputProps}
                   onChange={e => {
-                    debounceSearchTeams(e.target.value)
-                    inputProps.onChange(e)
+                    debounceSearchTeams(e.target.value);
+                    inputProps.onChange(e);
                   }}
                 />
-              )
+              );
             }}
           />
         </Pane>
@@ -211,7 +227,7 @@ const CreateMatch = ({ actions, onConfirm }) => {
         </Button>
       </Tooltip>
     </Pane>
-  )
-}
+  );
+};
 
-export default CreateMatch
+export default CreateMatch;

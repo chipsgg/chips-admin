@@ -29,7 +29,14 @@ class MatchTable extends React.Component {
             }, "")}
           </Table.TextCell>
         );
-
+      case "odds":
+        return (
+          <Table.TextCell key={key}>
+            {data.map(odds => odds.odds).toString()}
+          </Table.TextCell>
+        );
+      case "array":
+        return <Table.TextCell key={key}>{data.toString()}</Table.TextCell>;
       case "boolean":
         return (
           <Table.TextCell key={key}>{data ? "TRUE" : "FALSE"}</Table.TextCell>
@@ -37,7 +44,10 @@ class MatchTable extends React.Component {
       case "number":
         return (
           <Table.TextCell isNumber={true} key={key}>
-            ${data}
+            {data.toLocaleString("en-US", {
+              style: "currency",
+              currency: "USD"
+            })}
           </Table.TextCell>
         );
       case "time":
@@ -55,9 +65,9 @@ class MatchTable extends React.Component {
     return rows.length > 0 ? (
       <Table width={"100%"} height={"100%"}>
         <Table.Head>
-          {columns.map(([key, value]) => (
-            <Table.TextHeaderCell key={key}>{key}</Table.TextHeaderCell>
-          ))}
+          {columns.map(([key, value]) => {
+            return <Table.TextHeaderCell key={key}>{key}</Table.TextHeaderCell>;
+          })}
           {Edit && (
             <Table.TextHeaderCell key={"Actions"}>Actions</Table.TextHeaderCell>
           )}
