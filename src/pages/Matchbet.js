@@ -83,11 +83,12 @@ const Propositions = ({ actions }) => {
     ["ID", "id"],
     ["Name", "name"],
     ["Matchid", "matchid"],
-    ["Value", "value", 'number'],
+    ["Value", "value", "number"],
     ["Provider", "provider"],
-    ['Selections', 'selections', 'array'],
-    ['Odds', 'odds', 'odds'],
-    ["Status", "state", "state"],
+    ["Selections", "selections", "array"],
+    ["Odds", "odds", "odds"],
+    ["Start Time", "startTime", "time"],
+    ["Status", "state", "state"]
   ];
 
   return (
@@ -95,12 +96,10 @@ const Propositions = ({ actions }) => {
       actions={actions}
       columns={columns}
       listFunc={e => {
-        return actions
-          .listPropositions()
-          .then(list => {
-            console.log(list)
-            return sortBy(list, "created")
-          });
+        return actions.listPropositions().then(list => {
+          console.log(list);
+          return sortBy(list, "created");
+        });
       }}
       // editFunc={p => <EditMatch {...p} />}
       tableActions={<TableActions actions={actions} />}

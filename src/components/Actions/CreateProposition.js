@@ -17,17 +17,19 @@ class CreateProposition extends React.Component {
       showConfirmation: false,
       name: "",
       selections: [],
-      position: 0
+      position: 0,
+      startTime: 0
     };
   }
 
   render() {
     const { onConfirm } = this.props;
-    const { showConfirmation, name, selections, position } = this.state;
+    const { showConfirmation, name, selections, position, startTime } = this.state;
 
     return (
       <Pane>
         <Dialog
+          shouldCloseOnOverlayClick={false}
           title="Custom | Create Proposition"
           isShown={showConfirmation}
           onCloseComplete={() => this.setState({ showConfirmation: false })}
@@ -37,7 +39,8 @@ class CreateProposition extends React.Component {
               await onConfirm({
                 position,
                 name,
-                selections
+                selections,
+                startTime: Date.now() + startTime * (1000 * 60)
               })
                 .then(resp => toaster.success("Proposition Created!"))
                 .catch(err => toaster.danger(err.message));
@@ -49,6 +52,16 @@ class CreateProposition extends React.Component {
           intent="success"
         >
           <Pane>
+            <TextInputField
+              type="number"
+              label="Start Time"
+              description="How many MINUTES before the match begins?"
+              placeholder={48}
+              value={startTime}
+              onChange={e =>
+                this.setState({ startTime: parseInt(e.target.value) })
+              }
+            />
             <TextInputField
               label="Position (Round)"
               description="The round the proposition is relevant for. Round 0 is equivilant to the entirity of the match. (all rounds)"
