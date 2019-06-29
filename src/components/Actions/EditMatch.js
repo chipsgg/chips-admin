@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 import {
   Pane,
   Heading,
@@ -12,50 +12,50 @@ import {
   Badge,
   Button,
   Tooltip,
-  Spinner
-} from "evergreen-ui";
+  Spinner,
+} from 'evergreen-ui'
 
-import MatchEditor from "./MatchEditor";
-import CancelConfirm from "./CancelConfirm";
-import ResolveConfirm from "./ResolveConfirm";
-import CreateProposition from "./CreateProposition";
-import PlaceBet from "./Placebet";
-import { orderBy } from "lodash";
+import MatchEditor from './MatchEditor'
+import CancelConfirm from './CancelConfirm'
+import ResolveConfirm from './ResolveConfirm'
+import CreateProposition from './CreateProposition'
+import PlaceBet from './Placebet'
+import { orderBy } from 'lodash'
 
 class EditMatch extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       isShown: false,
       loading: false,
       propositions: props.row.propositions || [],
-      match: props.row
-    };
+      match: props.row,
+    }
   }
 
   toggleShown = () => {
-    const { onClose } = this.props;
-    if (this.state.isShown && onClose) onClose();
+    const { onClose } = this.props
+    if (this.state.isShown && onClose) onClose()
     this.setState({
-      isShown: !this.state.isShown
-    });
-  };
+      isShown: !this.state.isShown,
+    })
+  }
 
   getPropositions = async () => {
-    this.setState({ loading: true });
-    const { actions } = this.props;
-    const { match } = this.state;
-    const list = await actions.listPropositionsByMatchid({ matchid: match.id });
-    console.log(list);
+    this.setState({ loading: true })
+    const { actions } = this.props
+    const { match } = this.state
+    const list = await actions.listPropositionsByMatchid({ matchid: match.id })
+    console.log(list)
     this.setState({
       loading: false,
-      propositions: list
-    });
-  };
+      propositions: list,
+    })
+  }
 
   render() {
-    const { isShown, match, propositions, loading } = this.state;
-    const { actions } = this.props;
+    const { isShown, match, propositions, loading } = this.state
+    const { actions } = this.props
     return (
       <Pane>
         <SideSheet
@@ -63,9 +63,9 @@ class EditMatch extends React.Component {
           isShown={isShown}
           onCloseComplete={() => this.setState({ isShown: false })}
           containerProps={{
-            display: "flex",
-            flex: "1",
-            flexDirection: "column"
+            display: 'flex',
+            flex: '1',
+            flexDirection: 'column',
           }}
         >
           <Pane zIndex={1} flexShrink={0} elevation={0} backgroundColor="white">
@@ -93,29 +93,30 @@ class EditMatch extends React.Component {
                 Refresh
               </Button>
               <MatchEditor
-                schema={match}
+                getFunc={() => actions.getMatch({ matchid: match.id })}
                 onConfirm={async match => {
-                  match = JSON.parse(match);
-                  await actions.editMatch(match);
-                  await this.getPropositions();
+                  match = JSON.parse(match)
+                  await actions.editMatch(match)
+                  const newMatch = await actions.getMatch({ matchid: match.id })
+                  return this.setState({ match: newMatch })
                 }}
               >
-                Edit Match
+                Edit
               </MatchEditor>
               <CreateProposition
                 onConfirm={async params => {
                   await actions.createProposition({
                     matchid: match.id,
-                    ...params
-                  });
-                  await this.getPropositions();
+                    ...params,
+                  })
+                  await this.getPropositions()
                 }}
               />
               <CancelConfirm
                 marginLeft={16}
                 onConfirm={async () => {
-                  await actions.cancelMatch({ matchid: match.id });
-                  this.toggleShown();
+                  await actions.cancelMatch({ matchid: match.id })
+                  this.toggleShown()
                 }}
               >
                 Cancel
@@ -134,7 +135,7 @@ class EditMatch extends React.Component {
                 <Spinner />
               </Pane>
             ) : (
-              orderBy(propositions, "done").map(proposition => (
+              orderBy(propositions, 'done').map(proposition => (
                 <Card
                   key={proposition.id}
                   backgroundColor="white"
@@ -143,7 +144,7 @@ class EditMatch extends React.Component {
                   padding={16}
                   position="relative"
                 >
-                  {proposition.state === "finished" && (
+                  {proposition.state === 'finished' && (
                     <Pane
                       top={0}
                       left={0}
@@ -160,15 +161,29 @@ class EditMatch extends React.Component {
                     <Pane flex={1}>
                       <Heading>{proposition.name}</Heading>
                     </Pane>
-                    {proposition.state !== "finished" && (
+                    {proposition.state !== 'finished' && (
                       <Pane display="flex" flexDirection="row">
+                        <MatchEditor
+                          getFunc={() =>
+                            actions.getProposition({
+                              propositionid: proposition.id,
+                            })
+                          }
+                          onConfirm={async proposition => {
+                            proposition = JSON.parse(proposition)
+                            await actions.editProposition(proposition)
+                            await this.getPropositions()
+                          }}
+                        >
+                          Edit
+                        </MatchEditor>
                         <PlaceBet
                           onConfirm={async params => {
                             await actions.placeBetOnProposition({
                               propositionid: proposition.id,
-                              ...params
-                            });
-                            await this.getPropositions();
+                              ...params,
+                            })
+                            await this.getPropositions()
                           }}
                           selections={proposition.selections}
                         />
@@ -176,18 +191,18 @@ class EditMatch extends React.Component {
                           onConfirm={async selection => {
                             await actions.resolveProposition({
                               propositionid: proposition.id,
-                              selection
-                            });
-                            await this.getPropositions();
+                              selection,
+                            })
+                            await this.getPropositions()
                           }}
                           selections={proposition.selections}
                         />
                         <CancelConfirm
                           onConfirm={async () => {
                             await actions.cancelProposition({
-                              propositionid: proposition.id
-                            });
-                            await this.getPropositions();
+                              propositionid: proposition.id,
+                            })
+                            await this.getPropositions()
                           }}
                         />
                       </Pane>
@@ -213,9 +228,9 @@ class EditMatch extends React.Component {
                     <ListItem>
                       <Strong>Value: </Strong>
                       <Badge>
-                        {proposition.value.toLocaleString("en-US", {
-                          style: "currency",
-                          currency: "USD"
+                        {proposition.value.toLocaleString('en-US', {
+                          style: 'currency',
+                          currency: 'USD',
                         })}
                       </Badge>
                     </ListItem>
@@ -225,7 +240,7 @@ class EditMatch extends React.Component {
                     </ListItem>
                     <ListItem>
                       <Strong>Outcome: </Strong>
-                      {proposition.outcome || "n/a"}
+                      {proposition.outcome || 'n/a'}
                     </ListItem>
                   </UnorderedList>
                 </Card>
@@ -239,8 +254,8 @@ class EditMatch extends React.Component {
           </Button>
         </Tooltip>
       </Pane>
-    );
+    )
   }
 }
 
-export default EditMatch;
+export default EditMatch
