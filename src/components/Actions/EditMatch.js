@@ -21,6 +21,7 @@ import ResolveConfirm from './ResolveConfirm'
 import CreateProposition from './CreateProposition'
 import PlaceBet from './Placebet'
 import { orderBy } from 'lodash'
+import moment from 'moment'
 
 class EditMatch extends React.Component {
   constructor(props) {
@@ -218,6 +219,14 @@ class EditMatch extends React.Component {
                       {proposition.provider}
                     </ListItem>
                     <ListItem>
+                      <Strong>StartTime: </Strong>
+                      {moment(proposition.startTime).fromNow()}
+                    </ListItem>
+                    <ListItem>
+                      <Strong>State: </Strong>
+                      <Badge>{proposition.state}</Badge>
+                    </ListItem>
+                    <ListItem>
                       <Strong>Selections: </Strong>
                       {proposition.selections.toString()}
                     </ListItem>
@@ -233,10 +242,6 @@ class EditMatch extends React.Component {
                           currency: 'USD',
                         })}
                       </Badge>
-                    </ListItem>
-                    <ListItem>
-                      <Strong>State: </Strong>
-                      <Badge>{proposition.state}</Badge>
                     </ListItem>
                     <ListItem>
                       <Strong>Outcome: </Strong>
