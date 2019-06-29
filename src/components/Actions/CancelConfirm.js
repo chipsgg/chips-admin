@@ -41,10 +41,7 @@ class CancelConfirm extends React.Component {
       <Pane>
         <Confirmation
           showConfirmation={showConfirmation}
-          setState={state => {
-            console.log(state);
-            this.setState(state);
-          }}
+          setState={this.setState}
           onConfirm={async () => {
             toaster.notify("Canceling...");
             if (onConfirm) {

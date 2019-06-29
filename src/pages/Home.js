@@ -15,7 +15,6 @@ class Home extends React.Component {
   // async getMatches() {
   //   const { actions } = this.props;
   //   const list = await actions.listAvailableMatchesWithPropositions();
-  //   console.log(list);
   // }
 
   render() {

@@ -39,7 +39,6 @@ const CreateMatch = ({ actions, onConfirm }) => {
   function searchTeams(search = "") {
     return actions.searchMatchTeams({ search }).then(teams => {
       teams = teams.map(x => x.name);
-      console.log(teams);
       return setAvailTeams(teams);
     });
   }
@@ -47,7 +46,6 @@ const CreateMatch = ({ actions, onConfirm }) => {
   function searchLeagues(search = "") {
     return actions.searchMatchLeagues({ search }).then(leagues => {
       leagues = leagues.map(x => x.name);
-      console.log(leagues);
       return setAvailLeagues(leagues);
     });
   }
@@ -70,7 +68,6 @@ const CreateMatch = ({ actions, onConfirm }) => {
       opponentOne,
       opponentTwo
     };
-    console.log(data);
     if (onConfirm) {
       await onConfirm(data)
         .then(resp => toaster.success("Match Created!"))

@@ -20,7 +20,6 @@ class Header extends React.Component {
   getWalletBalance = async () => {
     const { actions } = this.props
     const wallet = await actions.myWallet()
-    console.log(wallet)
     this.setState({ wallet })
   }
 

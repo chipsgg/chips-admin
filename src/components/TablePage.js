@@ -47,12 +47,10 @@ const TablePage = ({
 
   const onSearch = value => {
     if (searchTerm.length < 2) return;
-    console.log("searching...");
     setLoading(true);
 
     const searchResults = list.filter(row => {
       return columns.find(([label, prop, type]) => {
-        // console.log(row[prop], searchTerm);
         return row[prop]
           .toString()
           .toLowerCase()

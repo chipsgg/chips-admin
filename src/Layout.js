@@ -19,7 +19,6 @@ const Layout = ({ actions, user }) => (
           <Redirect exact from="/" to="/home" />
 
           {Object.keys(Pages).map(pageKey => {
-            console.log('init page:', pageKey)
             const Page = Pages[pageKey];
             if (pageKey === "NotFound") return <Route component={Page} />;
             return (

@@ -28,7 +28,6 @@ class EditMatch extends React.Component {
   }
 
   toggleShown = () => {
-    console.log("toggle");
     this.setState({
       isShown: !this.state.isShown
     });
@@ -38,7 +37,6 @@ class EditMatch extends React.Component {
 //     this.setState({ loading: true });
 //     const { actions, match } = this.props;
 //     const list = await actions.listPropositionsByMatchid({ matchid: match.id });
-//     console.log(list);
 //     this.setState({
 //       loading: false
 //     });

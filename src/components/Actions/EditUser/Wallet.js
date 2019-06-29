@@ -34,7 +34,6 @@ class EditMatch extends React.Component {
     this.setState({ wallet: null });
     const { actions, userid } = this.props;
     const wallet = await actions.getWallet({ userid });
-    console.log(wallet);
     this.setState({
       wallet
     });
