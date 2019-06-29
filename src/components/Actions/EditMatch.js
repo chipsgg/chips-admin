@@ -61,6 +61,11 @@ const Actions = ({ actions, match, onConfirm, onCancel }) => {
 }
 
 const MatchInfo = ({ match, propositions }) => {
+  const value = propositions.reduce((memo, row) => {
+    memo += row.value
+    return memo
+  }, 0)
+  
   return (
     <Pane display="flex" flexDirection="row" padding={16}>
       <Pane flex={1}>
@@ -69,14 +74,18 @@ const MatchInfo = ({ match, propositions }) => {
           {match.id}
         </Paragraph>
       </Pane>
-      <Pane display="flex" flexDirection="column" justifyContent="space-between">
+      <Pane
+        display="flex"
+        flexDirection="column"
+        justifyContent="space-between"
+      >
         <Badge>{match.state}</Badge>
         <Badge>
           $
-          {propositions.reduce((memo, row) => {
-            memo += row.value
-            return memo
-          }, 0)}
+          {value.toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'USD',
+          })}
         </Badge>
       </Pane>
     </Pane>
