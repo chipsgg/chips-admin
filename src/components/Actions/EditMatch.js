@@ -3,11 +3,12 @@ import {
   Pane,
   Heading,
   SideSheet,
-  Paragraph,
   Badge,
   Button,
   Tooltip,
   Spinner,
+  Strong,
+  Text,
 } from 'evergreen-ui'
 
 import MatchEditor from './MatchEditor'
@@ -65,23 +66,34 @@ const MatchInfo = ({ match, propositions }) => {
     memo += row.value
     return memo
   }, 0)
-  
+
   return (
     <Pane display="flex" flexDirection="row" padding={16}>
       <Pane flex={1}>
         <Heading size={600}>Edit Match Details</Heading>
-        <Paragraph size={400} color="muted">
+        <Pane display="flex" flexDirection="column">
+          <Text>
+            <Strong>ID: </Strong>
+            {match.id}
+          </Text>
+          <Text>
+            <Strong>Name: </Strong>
+            {match.name}
+          </Text>
+        </Pane>
+
+        {/* <Paragraph size={400} color="muted">
           {match.id}
-        </Paragraph>
+          {match.name}
+        </Paragraph> */}
       </Pane>
       <Pane
         display="flex"
         flexDirection="column"
-        justifyContent="space-between"
+        justifyContent="space-evenly"
       >
         <Badge>{match.state}</Badge>
         <Badge>
-          $
           {value.toLocaleString('en-US', {
             style: 'currency',
             currency: 'USD',
@@ -106,7 +118,9 @@ const Header = ({ children }) => {
   )
 }
 
-const EditMatch = ({ matchid, actions, onClose }) => {
+const EditMatch = ({ row, actions, onClose }) => {
+  const matchid = row.id
+
   const [loading, setLoading] = useState(true)
   const [isShown, setIsShown] = useState(false)
   const [match, setMatch] = useState({})
@@ -118,7 +132,8 @@ const EditMatch = ({ matchid, actions, onClose }) => {
   }
 
   const getPropositions = async () => {
-    const list = await actions.listPropositionsByMatchid({ matchid })
+    let list = await actions.listPropositionsByMatchid({ matchid })
+    list = orderBy(list, 'done')
     setPropositions(list)
   }
 
@@ -170,7 +185,7 @@ const EditMatch = ({ matchid, actions, onClose }) => {
               <Spinner />
             </Pane>
           ) : (
-            orderBy(propositions, 'done').map(proposition => (
+            propositions.map(proposition => (
               <Proposition
                 key={proposition.id}
                 proposition={proposition}

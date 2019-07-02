@@ -84,7 +84,8 @@ class MatchTable extends React.Component {
               {Edit && (
                 <Table.Cell>
                   {Edit({
-                    matchid: row.id,
+                    rowid: row.id,
+                    row,
                     actions,
                   })}
                 </Table.Cell>
