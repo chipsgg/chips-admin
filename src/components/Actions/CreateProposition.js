@@ -96,7 +96,7 @@ class CreateProposition extends React.Component {
               this.setState({ showConfirmation: true });
             }}
           >
-            Create Proposition
+            Proposition
           </Button>
         </Tooltip>
       </Pane>

@@ -14,6 +14,8 @@ import {
 import MatchEditor from './MatchEditor'
 import CancelConfirm from './CancelConfirm'
 import CreateProposition from './CreateProposition'
+import EditStartTime from './EditStartTime'
+
 import { orderBy } from 'lodash'
 
 import Proposition from '../Proposition'
@@ -39,6 +41,12 @@ const Actions = ({ actions, match, onConfirm, onCancel }) => {
       >
         Edit
       </MatchEditor>
+      <EditStartTime
+        onConfirm={async startTime => {
+          await actions.editMatch({ id: match.id, startTime })
+          if (onConfirm) onConfirm()
+        }}
+      >StartTime</EditStartTime>
       <CreateProposition
         onConfirm={async params => {
           await actions.createProposition({
@@ -87,11 +95,7 @@ const MatchInfo = ({ match, propositions }) => {
           {match.name}
         </Paragraph> */}
       </Pane>
-      <Pane
-        display="flex"
-        flexDirection="column"
-        justifyContent="space-evenly"
-      >
+      <Pane display="flex" flexDirection="column" justifyContent="space-evenly">
         <Badge>{match.state}</Badge>
         <Badge>
           {value.toLocaleString('en-US', {

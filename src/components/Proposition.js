@@ -15,6 +15,8 @@ import ResolveConfirm from './Actions/ResolveConfirm'
 import MatchEditor from './Actions/MatchEditor'
 import CancelConfirm from './Actions/CancelConfirm'
 
+import EditStartTime from './Actions/EditStartTime'
+
 const Proposition = ({ proposition, actions, onConfirm }) => {
   return (
     <Card
@@ -53,18 +55,24 @@ const Proposition = ({ proposition, actions, onConfirm }) => {
               onConfirm={async proposition => {
                 proposition = JSON.parse(proposition)
                 await actions.editProposition(proposition)
-                if(onConfirm) onConfirm()
+                if (onConfirm) onConfirm()
               }}
             >
               Edit
             </MatchEditor>
+            <EditStartTime
+              onConfirm={async startTime => {
+                await actions.editProposition({ id: proposition.id, startTime })
+                if (onConfirm) onConfirm()
+              }}
+            />
             <PlaceBet
               onConfirm={async params => {
                 await actions.placeBetOnProposition({
                   propositionid: proposition.id,
                   ...params,
                 })
-                if(onConfirm) onConfirm()
+                if (onConfirm) onConfirm()
               }}
               selections={proposition.selections}
             />
@@ -74,7 +82,7 @@ const Proposition = ({ proposition, actions, onConfirm }) => {
                   propositionid: proposition.id,
                   selection,
                 })
-                if(onConfirm) onConfirm()
+                if (onConfirm) onConfirm()
               }}
               selections={proposition.selections}
             />
@@ -83,7 +91,7 @@ const Proposition = ({ proposition, actions, onConfirm }) => {
                 await actions.cancelProposition({
                   propositionid: proposition.id,
                 })
-                if(onConfirm) onConfirm()
+                if (onConfirm) onConfirm()
               }}
             />
           </Pane>
