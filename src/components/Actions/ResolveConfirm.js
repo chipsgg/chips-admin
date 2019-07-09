@@ -33,17 +33,17 @@ class ResolveConfirm extends React.Component {
           title="Select The Resolve"
           isShown={showConfirmation}
           onCloseComplete={() => this.setState({ showConfirmation: false })}
-          confirmLabel="Resolve Proposition"
+          confirmLabel="Resolve"
           cancelLabel="Oops, nevermind."
           intent="success"
           containerProps={{
             zIndex: 999
           }}
           onConfirm={async () => {
-            toaster.notify("Resolving Proposition...");
+            toaster.notify("Resolving...");
             if (onConfirm) {
               await onConfirm(selected)
-                .then(resp => toaster.success("Proposition Resolved!"))
+                .then(resp => toaster.success("Resolved!"))
                 .catch(err => toaster.danger(err.message));
             }
             this.setState({ showConfirmation: false });

@@ -15,6 +15,7 @@ import MatchEditor from './MatchEditor'
 import CancelConfirm from './CancelConfirm'
 import CreateProposition from './CreateProposition'
 import EditStartTime from './EditStartTime'
+import ResolveConfirm from './ResolveConfirm'
 
 import { orderBy } from 'lodash'
 
@@ -46,7 +47,9 @@ const Actions = ({ actions, match, onConfirm, onCancel }) => {
           await actions.editMatch({ id: match.id, startTime })
           if (onConfirm) onConfirm()
         }}
-      >StartTime</EditStartTime>
+      >
+        StartTime
+      </EditStartTime>
       <CreateProposition
         onConfirm={async params => {
           await actions.createProposition({
@@ -56,15 +59,23 @@ const Actions = ({ actions, match, onConfirm, onCancel }) => {
           if (onConfirm) onConfirm()
         }}
       />
+      <ResolveConfirm
+        onConfirm={async selection => {
+          await actions.resolveMatch({
+            matchid: match.id,
+            selection,
+          })
+          if (onConfirm) onConfirm()
+        }}
+        selections={match.opponents.map(x => x.name)}
+      />
       <CancelConfirm
         marginLeft={16}
         onConfirm={async () => {
           await actions.cancelMatch({ matchid: match.id })
           if (onCancel) onCancel()
         }}
-      >
-        Cancel
-      </CancelConfirm>
+      />
     </Pane>
   )
 }
