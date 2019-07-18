@@ -1,35 +1,38 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
-import { Pane, Text } from "evergreen-ui";
+import { Pane, Text, Heading } from "evergreen-ui";
+import Stat from "../components/Stat.js";
 
-class Home extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
+const Home = ({ actions }) => {
+  const [stats, setStats] = useState({});
 
-  componentDidMount() {
-    // this.getMatches();
-  }
+  useEffect(() => {
+    actions
+      .getStats({
+        start: 1,
+        end: Date.now()
+      })
+      .then(([stats]) => {
+        console.log(stats);
+        setStats(stats);
+      })
+      .catch(console.error);
+  }, []);
 
-  // async getMatches() {
-  //   const { actions } = this.props;
-  //   const list = await actions.listAvailableMatchesWithPropositions();
-  // }
-
-  render() {
-    return (
-      <Pane
-        width={"100%"}
-        display="flex"
-        padding={16}
-        alignItems="center"
-        justifyContent="center"
-      >
-        <Text>A homepage yo, maybe some stats or somthing...</Text>
-      </Pane>
-    );
-  }
-}
+  return (
+    <Pane
+      width={"100%"}
+      display="flex"
+      padding={16}
+      alignItems="center"
+      justifyContent="center"
+    >
+      <Stat label="Total Bet Count" value={stats.betsCount} />
+      <Stat type="money" label="Total Value Bet" value={stats.betsValue} />
+      <Stat label="Resolved Propositions" value={stats.propositionsComplete} />
+      <Stat type="money" label="Total Rake" value={stats.rakeValue} />
+    </Pane>
+  );
+};
 
 export default Home;
