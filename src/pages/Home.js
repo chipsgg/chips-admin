@@ -31,6 +31,9 @@ const Home = ({ actions }) => {
       <Stat type="money" label="Total Value Bet" value={stats.betsValue} />
       <Stat label="Resolved Propositions" value={stats.propositionsComplete} />
       <Stat type="money" label="Total Rake" value={stats.rakeValue} />
+      <Stat type="money" label="Total Deposited" value={stats.depositvalue} />
+      <Stat type="money" label="Total Withdrawn" value={stats.withdrawValue} />
+      <Stat label="New Users" value={stats.newUsers} />
     </Pane>
   );
 };
